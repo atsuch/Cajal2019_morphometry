@@ -87,7 +87,9 @@ def get_bokehpalette(cmap, N):
     Create bokeh palette of size N
 
     cmap: any matplotlib colormap
+
     """
+    from matplotlib import cm
     colormap =cm.get_cmap(cmap, lut=N)
     bokehpalette = [mpl.colors.rgb2hex(m) for m in colormap(np.arange(colormap.N))]
 
@@ -114,7 +116,7 @@ def plot_dist_box_by_cols(summary_df, measure_name,
                           cols_to_plot, col_groupname, colnames=None,
                           title=None, horizontal=True,
                           cmap="Spectral", palette=None,
-                          urlbase=None, part="anatomical", bgcolor="#D9EEF1",
+                          bgcolor="#D9EEF1",
                           plot_range=None, plot_size=None, 
                           linked_plot=None, out_html=None, nolegend=False):
     '''
@@ -287,10 +289,7 @@ def plot_dist_box_by_cols(summary_df, measure_name,
         scat_hover = HoverTool(renderers=[out_scatter], tooltips=scatter_tooltips)
         
         
-        url = urlbase + '/QCindividual/QCreport_' + '@%s'% df_toplot.index.name + '/indexed_{}.html'.format(part)
-        tap_hover = TapTool(renderers=[out_scatter],callback=OpenURL(url=url))
-        
-        p.add_tools(scat_hover,tap_hover)
+        p.add_tools(scat_hover)
         p.renderers.extend([out_scatter])
 
     p.min_border = 10 #5
@@ -389,9 +388,7 @@ def plot_hist_box(summary_df,
                   plot_range=None, hist_bins=100,
                   plot_width=None,
                   palette=None, out_html=None,
-                  nolegend = False,
-                  urlbase='file:///beegfs_data/repos',
-                  part="anatomical"):
+                  nolegend = False):
     '''
     Stack histogram + boxplot in one figure
     + plot as a HTML if out_html != None
@@ -420,11 +417,8 @@ def plot_hist_box(summary_df,
                                 plot_range = plot_range,
                                 title = '',
                                 palette = palette,
-                                nolegend = nolegend,
-                                urlbase = urlbase,
                                 plot_size = distbox_size,
-                                bgcolor = bgcolor,
-                                part = part)
+                                bgcolor = bgcolor)
     
     top = build_histogram(summary_df,
                         measure_name = measure_name,
@@ -450,7 +444,7 @@ def plot_hist_box(summary_df,
 def pairplots_by_region(summary_df, measure_name,
                         col1, col2,
                         title=None, color='navy', bgcolor="#D9EEF1", plot_size=(500, 500),
-                        line_fit='ortho', out_html=None, urlbase=None, part = "anatomical"):
+                        line_fit='ortho', out_html=None):
 
     # We only need cols_to_plot
     # Note that it uses idx values and name to label scatter points
@@ -483,10 +477,6 @@ def pairplots_by_region(summary_df, measure_name,
     hover = bokeh.models.HoverTool(tooltips=tooltips, renderers=[points])
     p.add_tools(hover)
     p.renderers.extend([points])
-    
-    url = urlbase + '/QCindividual/QCreport_' + '@%s'% df_toplot.index.name + '/indexed_{}.html'.format(part)
-    tap_hover = TapTool(renderers=[points],callback=OpenURL(url=url))
-    p.add_tools(tap_hover)
     
     p.xaxis.axis_label = col1
     p.yaxis.axis_label = col2
