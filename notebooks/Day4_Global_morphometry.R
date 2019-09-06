@@ -1,9 +1,9 @@
 library(stats)
 
-setwd("~/Dropbox/Ami-work/Cajal_school/")
+setwd("~/Cajal2019_morphometry/")
 
 # MRiShare sample data
-master_morph <- read.table("sample_mrishare_morphometry.csv", header=TRUE, sep=",", dec=".")
+master_morph <- read.table("data/sample_mrishare_morphometry.csv", header=TRUE, sep=",", dec=".")
 head(master_morph)
 summary(master_morph)
 
